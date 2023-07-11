@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import AddedNoteBox from './KeepNote/AddedNoteBox';
+import Header from './KeepNote/header';
+import SideBar from './KeepNote/SideBar';
+import TakeNotes from './KeepNote/TakeNotes';
 
-function App() {
+const App = (props) => {
+  const [addNote,setAddNote]= useState([]);
+  const origHandleAddBtn = (notes) =>
+  {
+    setAddNote((prevValue)=>{
+        return[
+          ...prevValue,
+          notes,
+        ]
+    })
+    console.log(addNote);
+  }
+
+  const origHandleDltBtn = (id) =>
+  {
+    setAddNote((prevValue)=>{
+      let newArr = prevValue.filter( (arrEle, index) =>{
+        return index !== id;
+      } )
+      return newArr;
+    })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header/>
+      <div className="sideBarNotes">
+        <SideBar/>
+        <TakeNotes passOriHandleAddBtn={origHandleAddBtn} />
+      </div>
+      <div className='box-container'> 
+      {addNote.map((currValue, index)=>{
+        return <AddedNoteBox key={index} id={index} passTitle={currValue.title} passContent={currValue.content} passOriHandleDltBtn={origHandleDltBtn} /> 
+      }) }
+      </div>
+      {/* <AddedNoteBox/> */}
+    </>
   );
 }
 
 export default App;
+
+
+
+
+      {/* <TakeNote PassAddBtn = { handleOrAddBtn }  PassTitle = { addNote }  /> */}
